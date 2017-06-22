@@ -66,8 +66,8 @@
     <Compile Include="Repositories\GitToExcelClient.cs" />
     <Compile Include="Repositories\RetrieveComments.cs" />
     <Compile Include="Repositories\RetrieveRepo.cs" />
-    <Compile Include="Repositories\RetriveIssues.cs" />
-    <Compile Include="Repositories\RetriveMileStones.cs" />
+    <Compile Include="Repositories\IssuesRepo.cs" />
+    <Compile Include="Repositories\MileStonesRepo.cs" />
     <Compile Include="ViewModels\EventViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
