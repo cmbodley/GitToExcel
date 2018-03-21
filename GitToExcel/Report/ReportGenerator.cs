@@ -16,16 +16,20 @@ namespace GitToExcel.Report
     {
         private string UserName { get; set; }
         private string Password { get; set; }
+        private string Template { get; set; }
 
         public ReportGenerator(string user, string pass)
         {
             this.UserName = user;
             this.Password = pass;
+            this.Template = Environment.OSVersion.ToString().Contains("Windows")
+                ? ".\\ReportTemplates\\BlankIssues.xlsx"
+                : "./ReportTemplates/BlankIssues.xlsx";
         }
 
         public void GenerateIssueReport(IReadOnlyList<Issue> issues, Repository repo, string mileStoneName = null, IReadOnlyList<Project> projects = null)
         {
-            XLWorkbook workbook = new XLWorkbook("./ReportTemplates/BlankIssues.xlsx");
+            XLWorkbook workbook = new XLWorkbook(this.Template);
             var openSheet = workbook.Worksheets.First(o => o.Name == "Open");
 
             int row = 2;
