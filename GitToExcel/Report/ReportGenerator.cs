@@ -21,7 +21,7 @@ namespace GitToExcel.Report
             this.Password = pass;
         }
 
-        public void GenerateIssueReport(IReadOnlyList<Issue> issues, Repository repo)
+        public void GenerateIssueReport(IReadOnlyList<Issue> issues, Repository repo, string MileStoneName)
         {
             XLWorkbook workbook = new XLWorkbook(".\\ReportTemplates\\BlankIssues.xlsx");
             var WorkSheet = workbook.Worksheets.First();
@@ -29,9 +29,9 @@ namespace GitToExcel.Report
             int row = 2;
             int col = 1;
 
+            var targeted = issues.Where(o => o.Milestone != null && o.Milestone.Title == MileStoneName).ToList();
 
-
-            foreach (var item in issues)
+            foreach (var item in targeted)
             {
                 WorkSheet.Cell(row, col).Value = item.Number;
                 col++;
@@ -66,7 +66,7 @@ namespace GitToExcel.Report
             int col = 1;
 
             //we need to group by mile stones
-            var groupedIssues = issues.GroupBy(k => k.Milestone.Title, p => p, (key, o) => new {Milestone = key, Issues = o.ToList()})
+            var groupedIssues = issues.Where(o => o.Milestone != null).GroupBy(k => k.Milestone.Title, p => p, (key, o) => new {Milestone = key, Issues = o.ToList()})
                 .ToList();
 
             //var newClient = new CustomCall(this.Password, this.UserName);

@@ -17,11 +17,15 @@ namespace GitToExcel
             var Owner = args[2];
             var Repo = args[3];
             var repo = new RetrieveRepo(Owner, Repo, password, userName);
-            var repo_milestone = new MileStonesRepo(password, userName);
             var repo_issue = new IssuesRepo(password, userName);
-            Task.Run(async () => await repo_milestone.CreateMileStone(repo.SelectedRepository.Id, "Test Repo", "Yes we have done it")).Wait();
 
-            Task.Run(async () => await repo_issue.CreateIssue(repo.SelectedRepository.Id,repo_milestone.CreatedMilestone.Number ,"Test issue", "it should have a milestone")).Wait();
+            repo_issue.GetIsssues(repo.SelectedRepository.Id);
+            ReportGenerator report = new ReportGenerator(userName, password);
+
+            report.GenerateIssueReport(repo_issue.Issues, repo.SelectedRepository, "Energy Management Issues");
+            //report.TaskListGenerateReport(repo_issue.Issues, repo.SelectedRepository);
+
+
         }
     }
 }
