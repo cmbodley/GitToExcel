@@ -17,14 +17,15 @@ namespace GitToExcel.Repositories
     {
         protected string Password { get; set; }
         protected string UserName { get; set; }
+        protected string HttpResponse { get; set; }
+        protected string Orgs { get; set; }
         
-        HttpClient httpclient = new HttpClient();
-        public HttpResponseMessage Response { get; set; }
 
-        public GitToExcelClient(string Password, string Username)
+        public GitToExcelClient(string Password, string Username, string orgs = null)
         {
             this.Password = Password;
             this.UserName = Username;
+            this.Orgs = orgs;
         }
 
         public GitHubClient GetClient()
@@ -35,29 +36,42 @@ namespace GitToExcel.Repositories
             return client;
         }
         
-        public string MakeGetReqest(string url)
+    
+
+        public  async Task NewCustomCal(string url)
         {
-            string baseUrl = "https://api.github.com";
-            var combinedUrl = baseUrl + url;
-            HttpWebRequest req = WebRequest.Create(new Uri(combinedUrl)) as HttpWebRequest;
-            req.UserAgent = "GitToExcel";
-            req.Headers.Add("Authorization", "Basic " + Convert.ToBase64String(new ASCIIEncoding().GetBytes(this.UserName + ":" + this.Password)));
-            string result = null;
-            using (HttpWebResponse resp = req.GetResponse() as HttpWebResponse)
-            {
-                StreamReader reader =
-                    new StreamReader(resp.GetResponseStream());
-                result = reader.ReadToEnd();
-            }
-            //var test = JsonConvert.DeserializeObject<Class1[]>(result);
-            return result;
+            string baseUrl = $"https://api.github.com/orgs/{Orgs}{url}";
+            var auth = Convert.ToBase64String(new ASCIIEncoding().GetBytes(this.UserName + ":" + this.Password));
+            
+            
+            HttpClient client = new HttpClient();
+            client.DefaultRequestHeaders.Accept.Clear();
+            client.DefaultRequestHeaders.Accept.Add(
+                new MediaTypeWithQualityHeaderValue("application/vnd.github.v3+json"));
+            client.DefaultRequestHeaders.Add("User-Agent", "cmbodley-GitToExcel");
+            
+            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", auth);
+            var stream = await client.GetStreamAsync(baseUrl);
+            
+            
+
+            Console.WriteLine(HttpResponse);
+
         }
 
+        public async Task ProcessRepositories()
+        {      HttpClient client = new HttpClient();
+            client.DefaultRequestHeaders.Accept.Clear();
+            client.DefaultRequestHeaders.Accept.Add(
+                new MediaTypeWithQualityHeaderValue("application/vnd.github.v3+json"));
+            client.DefaultRequestHeaders.Add("User-Agent", ".NET Foundation Repository Reporter");
 
-        public async Task MakeGetCall(string url)
-        {
-            Response = await httpclient.GetAsync(url);
+            var stringTask = client.GetStringAsync("https://api.github.com/orgs/dotnet/repos");
+
+            var msg = await stringTask;
+            Console.Write(msg);
         }
+   
 
     }
 }

@@ -46,7 +46,7 @@ namespace GitToExcel
 
                 var repo = new RetrieveRepo(groupName, repoName,
                     password, userName);
-                var repoIssue = new IssuesRepo(password, userName, repo.SelectedRepository.Id);
+                var repoIssue = new IssuesRepo(password, userName, repo.SelectedRepository.Id, groupName);
 
                 repoIssue.GetIsssues();
        

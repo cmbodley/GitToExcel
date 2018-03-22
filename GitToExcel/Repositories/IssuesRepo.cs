@@ -20,7 +20,7 @@ namespace GitToExcel.Repositories
         
         public Issue CreatedIssue { get; set; }
 
-        public IssuesRepo(string password, string username, long repoId) :base(password,username)
+        public IssuesRepo(string password, string username, long repoId, string orgs = null) :base(password,username, orgs)
         {
             this.RepoId = repoId;
         }
@@ -52,8 +52,11 @@ namespace GitToExcel.Repositories
 
         public void GetCardsManually(int columnId)
         {
-            var url = $"https://api.github.com/projects/columns/{columnId}/cards";
-            
+            var url = $"/projects/columns/{columnId}/cards";
+
+            Task.Run(async () => await this.NewCustomCal(url));
+ 
+            //Task.Run(async () => await this.ProcessRepositories());
         }
 
         
