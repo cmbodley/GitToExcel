@@ -27,7 +27,7 @@ namespace GitToExcel.Report
                 : "./ReportTemplates/BlankIssues.xlsx";
         }
 
-        public void GenerateIssueReport(IReadOnlyList<Issue> issues, Repository repo, string mileStoneName = null, IReadOnlyList<Project> projects = null)
+        public void GenerateIssueReport(IReadOnlyList<Issue> issues, Repository repo, string mileStoneName = null, IssuesRepo isRepo = null)
         {
             XLWorkbook workbook = new XLWorkbook(this.Template);
             var openSheet = workbook.Worksheets.First(o => o.Name == "Open");
@@ -39,11 +39,17 @@ namespace GitToExcel.Report
             var targeted = issues.Where(o => (mileStoneName != null &&  o.Milestone.Title == mileStoneName) || mileStoneName == null)
                 .GroupBy(x => x.State , (s,i) => new {state = s, issue = i})
                 .ToList();
-
+            
+            //we are going to test this first we get projects
+            isRepo.GetProjects();
+            isRepo.GetProjectColumns(isRepo.Projects.Select(o => o.Id).First());
+            //isRepo.GetCardsManually(isRepo.ProjectColumns.Select(o => o.Id).First());
 
             
             foreach (var item in targeted.Where(o => o.state == ItemState.Open).SelectMany(o => o.issue))
             {
+    
+                
                 openSheet.Cell(row, col).Value = item.Number;
                 col++;
                 openSheet.Cell(row, col).Value = repo.Name;

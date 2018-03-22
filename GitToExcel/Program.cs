@@ -46,10 +46,10 @@ namespace GitToExcel
 
                 var repo = new RetrieveRepo(groupName, repoName,
                     password, userName);
-                var repoIssue = new IssuesRepo(password, userName);
+                var repoIssue = new IssuesRepo(password, userName, repo.SelectedRepository.Id);
 
-                repoIssue.GetIsssues(repo.SelectedRepository.Id);
-                repoIssue.GetProjects(repo.SelectedRepository.Id);
+                repoIssue.GetIsssues();
+       
 
 
                 ReportGenerator report = new ReportGenerator(userName, password);
@@ -57,7 +57,7 @@ namespace GitToExcel
 
 
                 report.GenerateIssueReport(repoIssue.Issues, repo.SelectedRepository,
-                    string.IsNullOrWhiteSpace(milestoneName) ? null : milestoneName, repoIssue.Projects);
+                    string.IsNullOrWhiteSpace(milestoneName) ? null : milestoneName, repoIssue);
                 Console.WriteLine("Report Generated");
                 }
                 catch (Exception e)
