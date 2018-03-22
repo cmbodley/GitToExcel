@@ -45,6 +45,7 @@ namespace GitToExcel.Report
             isRepo.GetProjectColumns(isRepo.Projects.Select(o => o.Id).First());
             //isRepo.GetCardsManually(isRepo.ProjectColumns.Select(o => o.Id).First());
 
+
             
             foreach (var item in targeted.Where(o => o.state == ItemState.Open).SelectMany(o => o.issue))
             {

@@ -51,7 +51,7 @@ namespace GitToExcel.Repositories
             client.DefaultRequestHeaders.Add("User-Agent", "cmbodley-GitToExcel");
             
             client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", auth);
-            var stream = await client.GetStreamAsync(baseUrl);
+            HttpResponse = await client.GetStringAsync(baseUrl);
             
             
 
