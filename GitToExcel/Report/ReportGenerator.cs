@@ -53,6 +53,10 @@ namespace GitToExcel.Report
                 
                 openSheet.Cell(row, col).Value = item.Number;
                 col++;
+
+                openSheet.Cell(row, col).Value = item.User.Login;
+                col++;
+                
                 openSheet.Cell(row, col).Value = repo.Name;
                 col++;
                 openSheet.Cell(row, col).Value = item.Title;
@@ -77,6 +81,10 @@ namespace GitToExcel.Report
             {
                 closedSheet.Cell(row, col).Value = item.Number;
                 col++;
+
+                closedSheet.Cell(row, col).Value = item.User.Login;
+                col++;
+                
                 closedSheet.Cell(row, col).Value = repo.Name;
                 col++;
                 closedSheet.Cell(row, col).Value = item.Title;
